@@ -1,4 +1,4 @@
-package scaffold.framework.demo.config;
+package scaffold.framework.demo.config.springAuth.filters;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;

@@ -1,4 +1,4 @@
-package scaffold.framework.demo.config;
+package scaffold.framework.demo.config.springAuth.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

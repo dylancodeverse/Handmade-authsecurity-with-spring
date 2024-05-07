@@ -1,4 +1,4 @@
-package scaffold.framework.demo.config;
+package scaffold.framework.demo.config.springAuth.filters;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -20,6 +20,7 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import scaffold.framework.demo.config.springAuth.annotations.Auth;
 
 @WebFilter("/*")
 @Component

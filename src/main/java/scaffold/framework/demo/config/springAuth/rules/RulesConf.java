@@ -1,11 +1,11 @@
-package scaffold.framework.demo.config;
+package scaffold.framework.demo.config.springAuth.rules;
 
 import java.io.IOException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class ConfigFilter {
+public class RulesConf {
     public void loginPresent(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // if (request.getSession().getAttribute("usr") == null) {
         // System.out.println("not passed");
