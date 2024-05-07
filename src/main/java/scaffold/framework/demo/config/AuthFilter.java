@@ -5,35 +5,52 @@ import java.lang.reflect.Method;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @WebFilter("/*")
+@Component
 public class AuthFilter implements Filter {
 
     @Autowired
     private ApplicationContext context;
 
+    private RequestMappingHandlerMapping handlerMapping;
+
+    @PostConstruct
+    public void init() {
+        // Spécifiez le nom du bean que vous souhaitez utiliser
+        this.handlerMapping = (RequestMappingHandlerMapping) context.getBean("requestMappingHandlerMapping");
+    }
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         HttpServletRequest theRequest = (HttpServletRequest) request;
-        
-        // Récupérer le RequestMappingHandlerMapping
-        RequestMappingHandlerMapping handlerMapping = context.getBean(RequestMappingHandlerMapping.class);
+        HttpServletResponse response2 = (HttpServletResponse) response;
 
         // Obtenir le HandlerMethod qui correspond à l'URI
         HandlerMethod handlerMethod = null;
         try {
-            handlerMethod = (HandlerMethod) handlerMapping.getHandler(theRequest).getHandler();
+            HandlerExecutionChain varr = handlerMapping.getHandler(theRequest);
+            if (varr != null) {
+                System.out.println("-------filtre commence-------");
+
+                handlerMethod = (HandlerMethod) varr.getHandler();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -49,8 +66,9 @@ public class AuthFilter implements Filter {
                 Class<?> classSource = authAnnotation.classSource();
                 try {
                     Object obj = classSource.getConstructor().newInstance();
-                    classSource.getMethod(rule).invoke(obj);
-                    // si tsisy olana sinon tsy ato mi regle azy fa a partir anle rule 
+                    classSource.getMethod(rule, HttpServletRequest.class, HttpServletResponse.class).invoke(obj,
+                            theRequest, response2);
+                    // si tsisy olana sinon tsy ato mi regle azy fa a partir anle rule
                     chain.doFilter(request, response);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -63,6 +81,16 @@ public class AuthFilter implements Filter {
             chain.doFilter(request, response);
         }
 
+    }
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        // Initialisation du filtre
+    }
+
+    @Override
+    public void destroy() {
+        // Nettoyage du filtre
     }
 
 }

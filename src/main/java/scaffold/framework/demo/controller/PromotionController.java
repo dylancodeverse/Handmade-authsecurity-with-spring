@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import scaffold.framework.demo.config.Auth;
+import scaffold.framework.demo.config.ConfigFilter;
 import scaffold.framework.demo.entity.Promotion;
 import scaffold.framework.demo.service.PromotionService;
 
@@ -21,6 +23,7 @@ public class PromotionController {
     }
 
     @GetMapping("/list")
+    @Auth(rule = "loginPresent", classSource = ConfigFilter.class)
     public String listPromotions(Model model) {
         model.addAttribute("promotions", promotionService.findAll());
         return "pages/promotion/list";
