@@ -22,14 +22,15 @@ public class PromotionController {
         this.promotionService = promotionService;
     }
 
-    @GetMapping("/list")
     @Auth(rule = "loginPresent", classSource = RulesConf.class)
+    @GetMapping("/list")
     public String listPromotions(Model model) {
         model.addAttribute("promotions", promotionService.findAll());
         return "pages/promotion/list";
     }
 
     @GetMapping("/add")
+    @Auth(rule = "isAdmin", classSource = RulesConf.class)
     public String showAddPromotionForm(Model model) {
         return "pages/promotion/add";
     }
@@ -47,6 +48,8 @@ public class PromotionController {
     }
 
     @PostMapping("/edit")
+    @Auth(rule = "isAdmin", classSource = RulesConf.class)
+
     public String editPromotion(Promotion promotion) {
         // No error handling for yet
         if (promotion.getId() != null) {
