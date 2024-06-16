@@ -22,7 +22,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import scaffold.framework.demo.config.springAuth.annotations.Auth;
 
-@WebFilter("/*")
 @Component
 public class AuthFilter implements Filter {
 
